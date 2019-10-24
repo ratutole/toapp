@@ -1,12 +1,14 @@
 <template>
   <div class="home">
-    <div class="heading">{{this.error}}</div>
+    <div class="heading">{{ this.error }}</div>
     <div class="field is-grouped">
       <p class="control is-expanded">
         <input v-model="myTodo" class="input" />
       </p>
       <p class="control">
-        <button @click="addToDo" class="button is-rounded is-info">Add New Todo</button>
+        <button @click="addToDo" class="button is-rounded is-info">
+          Add New Todo
+        </button>
       </p>
     </div>
     <div>
@@ -14,8 +16,11 @@
       <div>
         <div v-for="todo in todos" :key="todo.id" class="block">
           <span class="tag is-light is-medium">
-            {{todo.todo}}
-            <button class="delete is-small" @click="deleteTodo(todo.id)"></button>
+            {{ todo.todo }}
+            <button
+              class="delete is-small"
+              @click="deleteTodo(todo.id)"
+            ></button>
           </span>
         </div>
       </div>
@@ -81,7 +86,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 .home {
