@@ -8,13 +8,17 @@
       <p class="control">
         <button @click="addToDo" class="button is-rounded is-info">Add New Todo</button>
       </p>
-      <p class="control">
-        <button @click="getTodos" class="button is-rounded is-info">Get Todos</button>
-      </p>
     </div>
     <div>
       <h2 class="subtitle">Todos</h2>
-      <p v-if="todos.length>0">{{todos}}</p>
+      <div v-if="todos.length>0">
+        <div v-for="todo in todos" :key="todo.todo" class="block">
+          <span class="tag is-light is-medium">
+            {{todo.todo}}
+            <button class="delete is-small" @click="deleteTodo(todo.id)"></button>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -32,13 +36,15 @@ export default {
       todos: []
     }
   },
+  mounted() {
+    this.getTodos()
+  },
   methods: {
     addToDo: function() {
       if (!this.myTodo) {
         this.error = 'Please take this seriously'
         return
       }
-      alert()
       fireDb
         .collection('todos')
         .add({
@@ -52,18 +58,31 @@ export default {
         })
         .catch(error => (this.error = error))
     },
-    getTodos: function() {
-      let todos = []
+    async getTodos() {
       fireDb
         .collection('todos')
+        .limit(6)
         .get()
-        .then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            // console.log(doc.id, ' => ', doc.data().todo)
-            // this.todos = this.todos.push('cat')
-            todos = todos.push(doc.data().todo)
-          })
+        .then(querySnapshot => {
+          const todos = querySnapshot.docs.map(doc => doc.data())
+          // do something with documents
+          this.todos = todos
+        })
+    },
+    deleteTodo(todoId) {
+      if (fireDb.collection('todos').doc(todoId)) {
+        alert(todoId)
+        return
+      }
+      fireDb
+        .collection('todos')
+        .doc(todoId)
+        .delete()
+        .then(function() {
+          console.log('Document successfully deleted!')
+        })
+        .catch(function(error) {
+          console.error('Error removing document: ', error)
         })
     }
   }

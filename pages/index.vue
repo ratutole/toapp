@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <h1 class="title">Todo Firebase</h1>
+      <h1 class="title">Todapp</h1>
       <todo />
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 64px;
   color: #35495e;
   letter-spacing: 1px;
   margin-bottom: 50px !important;
