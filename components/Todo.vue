@@ -11,8 +11,8 @@
     </div>
     <div>
       <h2 class="subtitle">Todos</h2>
-      <div v-if="todos.length>0">
-        <div v-for="todo in todos" :key="todo.todo" class="block">
+      <div>
+        <div v-for="todo in todos" :key="todo.id" class="block">
           <span class="tag is-light is-medium">
             {{todo.todo}}
             <button class="delete is-small" @click="deleteTodo(todo.id)"></button>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { fireDb } from '~/plugins/firebase.js'
+import { todosCollection } from '~/plugins/firebase.js'
 
 export default {
   name: 'Home',
@@ -36,46 +36,39 @@ export default {
       todos: []
     }
   },
-  mounted() {
-    this.getTodos()
+  // mounted() {
+  //   this.getTodos()
+  // },
+  firestore: {
+    todos: todosCollection.limit(6)
   },
+
   methods: {
     addToDo: function() {
       if (!this.myTodo) {
         this.error = 'Please take this seriously'
         return
       }
-      fireDb
-        .collection('todos')
+      todosCollection
         .add({
           todo: this.myTodo
         })
         .then(response => {
           if (response) {
+            this.error = `Todo added successfully, id${response.id}`
             this.myTodo = ''
-            this.error = 'Todo added successfully'
           }
         })
         .catch(error => (this.error = error))
     },
-    async getTodos() {
-      fireDb
-        .collection('todos')
-        .limit(6)
-        .get()
-        .then(querySnapshot => {
-          const todos = querySnapshot.docs.map(doc => doc.data())
-          // do something with documents
-          this.todos = todos
-        })
-    },
+    // getTodos: function() {
+    //   todosCollection
+    //     .limit(6)
+    //     .get()
+    //     .then(response => {})
+    // },
     deleteTodo(todoId) {
-      if (fireDb.collection('todos').doc(todoId)) {
-        alert(todoId)
-        return
-      }
-      fireDb
-        .collection('todos')
+      todosCollection
         .doc(todoId)
         .delete()
         .then(function() {
@@ -91,11 +84,15 @@ export default {
 
 
 <style scoped>
+.home {
+  /* background: yellow; */
+  min-width: 600px;
+}
 .heading {
   text-align: left;
 }
 
 .subtitle {
-  margin-top: 50px;
+  margin-top: 30px;
 }
 </style>
