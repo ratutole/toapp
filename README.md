@@ -1,6 +1,7 @@
 # todo
 
-> todo app full stack
+Nuxt js project using firebase as a backend solution for persistant data, you will need google api keys the spark plan will to for the todo 
+to work.
 
 ## Build Setup
 
